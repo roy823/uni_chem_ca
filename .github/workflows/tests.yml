@@ -11,7 +11,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
-      - run: python -m pip install -e ".[dev]"
+      - run: python -m pip install -e ".[dev,physics]"
       - run: python -m pytest -q
-      - run: unichem demo --steps 1 --output outputs/ci-demo
-      - run: unichem coupled-demo --steps 1 --output outputs/ci-coupled
+      - run: unichem evaluate --xyz examples/water.xyz --output outputs/ci-evaluate
+      - run: unichem simulate --xyz examples/water.xyz --steps 2 --output outputs/ci-simulate

@@ -1,113 +1,137 @@
-from __future__ import annotations
+"""Canonical v0.4 molecular checkpoints; no old auxiliary-kernel migration."""
 
 import json
 import os
 import tempfile
-from dataclasses import asdict
 from pathlib import Path
 
 import numpy as np
 import torch
 
 from .errors import StateError
-from .grid import Grid
+from .molecule import AtomState, World
 from .quantum.blocks import BlockMatrix
-from .species import OrbitalSpec, Species
-from .state import AtomState, ElectronState, LatentState, World
-
-SCHEMA_VERSION = 3
+from .runtime.local_cells import CellSnapshot
 
 
-def save_world(world: World, path: str | Path) -> None:
-    """Atomic replacement of a versioned, non-pickle NPZ checkpoint.
-
-    Only canonical state is persisted, never stale field/support work buffers.
-    Model weights are separate artifacts. Coordinate units are explicit.
-    """
+def save_world(world, path):
     world.validate()
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
+    a = world.atoms
+    arrays = {
+        name: getattr(a, name).numpy()
+        for name in ("ids", "numbers", "positions", "momenta", "masses")
+    }
     metadata = {
-        "schema_version": SCHEMA_VERSION,
+        "schema_version": 4,
         "units": "atomic",
-        "grid": asdict(world.grid),
-        "species": [asdict(s) for s in world.species],
-        "electron_count": world.electron_count,
+        "basis": world.basis,
+        "charge": world.charge,
+        "spin_counts": world.spin_counts,
+        "external_field": world.external_field,
         "time": world.time,
         "step": world.step,
-        "kernel_cutoff": world.electrons.cutoff,
-        "external_field": world.external_field,
-        "latent_grid": asdict(world.latent_grid),
-        "latent_kind": world.latent.kind,
+        "has_density": world.densities is not None,
     }
-    array = lambda t: t.detach().cpu().numpy()
-    arrays = {
-        "metadata": np.asarray(json.dumps(metadata, ensure_ascii=False)),
-        "atom_ids": array(world.atoms.ids),
-        "positions": array(world.atoms.positions),
-        "momenta": array(world.atoms.momenta),
-        "log_width_scale": array(world.atoms.log_width_scale),
-        "kernel_row": array(world.electrons.kernel.row),
-        "kernel_col": array(world.electrons.kernel.col),
-        "kernel_values": array(world.electrons.kernel.values),
-        "spin_counts": array(world.electrons.spin_counts),
-        "latent": array(world.latent.channels),
-        "memory": array(world.latent.memory),
-    }
-    handle, tmp = tempfile.mkstemp(prefix=path.name + ".", suffix=".tmp", dir=path.parent)
+    if world.densities is not None:
+        for spin, p in enumerate(world.densities):
+            for name in ("row", "col", "values"):
+                arrays[f"{spin}_{name}"] = getattr(p, name).numpy()
+    arrays["metadata"] = np.asarray(json.dumps(metadata))
+    handle, temporary = tempfile.mkstemp(prefix=path.name + ".", dir=path.parent)
     try:
-        with os.fdopen(handle, "wb") as file:
-            np.savez_compressed(file, **arrays)
-            file.flush()
-            os.fsync(file.fileno())
-        os.replace(tmp, path)
+        with os.fdopen(handle, "wb") as f:
+            np.savez_compressed(f, **arrays)
+            f.flush()
+            os.fsync(f.fileno())
+        os.replace(temporary, path)
     finally:
-        if os.path.exists(tmp):
-            os.unlink(tmp)
+        if os.path.exists(temporary):
+            os.unlink(temporary)
 
 
-def load_world(path: str | Path, *, device="cpu") -> World:
-    """No arbitrary pickle deserialization. Files still need normal resource limits."""
+def load_world(path):
+    with np.load(path, allow_pickle=False) as data:
+        meta = json.loads(str(data["metadata"].item()))
+        if meta["schema_version"] != 4 or meta["units"] != "atomic":
+            raise StateError("Unsupported checkpoint; v0.4 persists physical density kernels")
+        get = lambda key: torch.from_numpy(data[key].copy())
+        atoms = AtomState(
+            *(get(name) for name in ("ids", "numbers", "positions", "momenta", "masses"))
+        )
+        densities = None
+        if meta["has_density"]:
+            densities = tuple(
+                BlockMatrix(
+                    get(f"{s}_row"), get(f"{s}_col"), get(f"{s}_values"), len(atoms.numbers)
+                )
+                for s in range(2)
+            )
+        world = World(
+            atoms,
+            meta["basis"],
+            meta["charge"],
+            tuple(meta["spin_counts"]),
+            densities,
+            tuple(meta["external_field"]),
+            float(meta["time"]),
+            int(meta["step"]),
+        )
+    world.validate()
+    return world
+
+
+def save_cells(state, path):
+    """Persist the bounded CA state; independent of the HF reference schema."""
+    state.validate()
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    metadata = {
+        "state_kind": "local_ca",
+        "schema_version": 1,
+        "units": "atomic",
+        "time": state.time,
+        "step": state.step,
+    }
+    arrays = {
+        name: getattr(state.atoms, name).detach().cpu().numpy()
+        for name in ("ids", "numbers", "positions", "momenta", "masses")
+    }
+    arrays.update(
+        density=state.density.detach().cpu().numpy(),
+        channels=state.channels.cpu().numpy(),
+        metadata=np.asarray(json.dumps(metadata)),
+    )
+    handle, temporary = tempfile.mkstemp(prefix=path.name + ".", dir=path.parent)
     try:
-        with np.load(path, allow_pickle=False) as data:
-            meta = json.loads(str(data["metadata"].item()))
-            if meta["schema_version"] != SCHEMA_VERSION or meta["units"] != "atomic":
-                raise StateError("Unsupported checkpoint schema or unit system")
-            grid = Grid(
-                tuple(meta["grid"]["shape"]),
-                tuple(meta["grid"]["spacing"]),
-                tuple(meta["grid"]["origin"]),
-            )
-            latent_meta = meta["latent_grid"]
-            latent_grid = Grid(
-                tuple(latent_meta["shape"]),
-                tuple(latent_meta["spacing"]),
-                tuple(latent_meta["origin"]),
-            )
-            species = []
-            for item in meta["species"]:
-                spec = dict(item)
-                spec["orbitals"] = tuple(OrbitalSpec(**o) for o in spec["orbitals"])
-                species.append(Species(**spec))
-            t = lambda key: torch.from_numpy(data[key].copy()).to(device)
-            world = World(
-                grid,
-                tuple(species),
-                AtomState(t("atom_ids"), t("positions"), t("momenta"), t("log_width_scale")),
-                ElectronState(
-                    BlockMatrix(t("kernel_row"), t("kernel_col"), t("kernel_values"), len(species)),
-                    t("spin_counts"),
-                    meta["kernel_cutoff"],
-                ),
-                LatentState(t("latent"), t("memory"), latent_grid, meta["latent_kind"]),
-                float(meta["electron_count"]),
-                float(meta["time"]),
-                int(meta["step"]),
-                tuple(meta["external_field"]),
-            )
-        world.validate()
-        return world
-    except StateError:
-        raise
-    except (KeyError, ValueError, TypeError, OSError) as exc:
-        raise StateError(f"Invalid checkpoint: {exc}") from exc
+        with os.fdopen(handle, "wb") as stream:
+            np.savez_compressed(stream, **arrays)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temporary, path)
+    finally:
+        if os.path.exists(temporary):
+            os.unlink(temporary)
+
+
+def load_cells(path, *, device="cpu"):
+    with np.load(path, allow_pickle=False) as data:
+        meta = json.loads(str(data["metadata"].item()))
+        if meta != {
+            "state_kind": "local_ca",
+            "schema_version": 1,
+            "units": "atomic",
+            "time": meta.get("time"),
+            "step": meta.get("step"),
+        }:
+            raise StateError("Unsupported local CA checkpoint")
+        get = lambda name: torch.from_numpy(data[name].copy()).to(device)
+        atoms = AtomState(
+            *(get(name) for name in ("ids", "numbers", "positions", "momenta", "masses"))
+        )
+        state = CellSnapshot(
+            atoms, get("density"), get("channels"), float(meta["time"]), int(meta["step"])
+        )
+    state.validate()
+    return state

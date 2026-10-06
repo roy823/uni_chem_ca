@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Water Lab · Quantum CA</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="./style.css">
+  <script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+</head>
+<body>
+  <header>
+    <a class="brand" href="./"><span class="brand-mark">U</span><span>UNI<span class="brand-dot">·</span>CHEM</span></a>
+    <div class="header-rule"></div>
+    <span class="header-title">水的量子元胞实验</span>
+    <div class="header-right"><span class="status-dot"></span>真实计算轨迹 <span class="method-tag">HF / STO-3G</span></div>
+  </header>
+  <main>
+    <aside>
+      <div class="eyebrow">EXPERIMENT / 01</div>
+      <h1>从原子出发，<br>观察水的演化。</h1>
+      <p class="intro">统一量子能量与同步核更新。<br>无学习能量，无预定义反应规则。</p>
+      <label class="field-label" for="experiment">选择实验</label>
+      <select id="experiment" aria-label="选择实验"><option>正在读取轨迹…</option></select>
+      <p id="scenario-note" class="scenario-note">载入真实计算数据后开始播放。</p>
+      <div class="small-grid">
+        <div><span>原子数</span><strong id="atom-count">—</strong></div>
+        <div><span>计算时长</span><strong id="duration">—</strong></div>
+      </div>
+      <div class="section-title">显示方式</div>
+      <label class="switch-row"><span>电子键指标</span><input id="show-bonds" type="checkbox" checked><span class="switch"></span></label>
+      <label class="switch-row"><span>电荷着色</span><input id="charge-color" type="checkbox"><span class="switch"></span></label>
+      <label class="switch-row"><span>质子运动轨迹</span><input id="show-trail" type="checkbox" checked><span class="switch"></span></label>
+      <label class="field-label" for="proton">跟踪氢原子</label>
+      <select id="proton" aria-label="跟踪氢原子"></select>
+      <div class="legend"><span><i class="oxygen-dot"></i>氧 O</span><span><i class="hydrogen-dot"></i>氢 H</span><span><i class="proton-dot"></i>选中的氢</span></div>
+      <div class="evidence-box"><span class="eyebrow">反应观察</span><strong id="reaction-state">等待数据</strong><p id="evidence-note">几何、电荷、键指标与持续时间共同用于事后判断。</p></div>
+      <a id="download-data" class="data-link" href="#" download>下载原始轨迹数据 <span>↗</span></a>
+    </aside>
+    <section class="workspace">
+      <div class="scene-card">
+        <div class="scene-top"><div><span class="eyebrow">QUANTUM CELLULAR AUTOMATON</span><h2 id="scene-title">水簇 · 原生量子演化</h2></div><button id="reset-camera" class="quiet-button" aria-label="重置视角">重置视角 ⤢</button></div>
+        <div id="viewport" aria-label="可旋转的三维水分子轨迹"></div>
+        <div class="scene-bottom"><span>拖动旋转 · 滚轮缩放 · 点击原子选中</span><span>空间单位 Å</span></div>
+        <div class="time-badge"><span>SIMULATION TIME</span><strong id="current-time">0.00 <small>fs</small></strong></div>
+        <div id="atom-tooltip" hidden></div>
+        <div id="load-error" hidden></div>
+      </div>
+      <div class="transport">
+        <button id="play" class="play-button" aria-label="播放轨迹">▶ <span>播放</span></button>
+        <button id="previous-frame" class="frame-button" aria-label="上一帧">‹</button>
+        <input id="timeline" type="range" min="0" max="0" step="1" value="0" aria-label="轨迹帧">
+        <button id="next-frame" class="frame-button" aria-label="下一帧">›</button>
+        <span id="frame-number" class="frame-number">0 / 0</span>
+        <label class="speed-label">播放 <select id="speed" aria-label="播放速度"><option value="1">1 fs/s</option><option value="2.5" selected>2.5 fs/s</option><option value="5">5 fs/s</option></select></label>
+      </div>
+      <div class="observations">
+        <article class="chart-card"><div class="chart-heading"><span>选中质子的 O–H 距离</span><span id="distance-current">—</span></div><canvas id="distance-chart" aria-label="质子到各氧原子的距离曲线"></canvas><div class="chart-key"><i class="curve-a"></i>氧 0 <i class="curve-b"></i>氧 3 <span>Å / fs</span></div></article>
+        <article class="chart-card"><div class="chart-heading"><span>电子键指标</span><span id="bond-current">—</span></div><canvas id="bond-chart" aria-label="电子 Mayer 键指标曲线"></canvas><div class="chart-key"><i class="curve-a"></i>氧 0 <i class="curve-b"></i>氧 3 <span>Mayer / fs</span></div></article>
+        <article class="diagnostics"><div class="chart-heading"><span>计算诊断</span><span class="tiny-tag">NVE</span></div><dl><div><dt>能量偏差</dt><dd id="energy-error">—</dd></div><div><dt>电子数误差</dt><dd id="electron-error">—</dd></div><div><dt>电子自洽迭代</dt><dd id="scf-iterations">—</dd></div><div><dt>氧邻接氢数</dt><dd id="coordination">—</dd></div><div><dt>片段电荷 / e</dt><dd id="fragment-charge">—</dd></div></dl></article>
+      </div>
+      <footer><span id="run-scope">经典核 · 有限水簇 · 不代表液态水自由能或反应速率</span><span>显示帧间坐标插值；诊断值来自计算帧。</span></footer>
+    </section>
+  </main>
+  <section class="performance-section">
+    <div><span class="eyebrow">MEASURED, END TO END</span><h2>真实水簇计算成本</h2><p>包含积分、电子自洽与核力。时间步 0.1 fs；线程实验各测 2 步。</p><p id="performance-environment"></p></div>
+    <table><thead><tr><th>水分子</th><th>1 线程 / 秒每步</th><th>4 线程 / 秒每步</th><th>观测加速比</th><th>密度块占比</th></tr></thead><tbody id="performance-body"></tbody></table>
+    <p class="performance-note">本页展示独立 HF 参照轨迹，其默认积分预算最多 14 个原子。局域 CA 本体已另行完成 30,000 元胞规模验收；大型化学验证仍待整体场模型接入。</p>
+  </section>
+  <script type="module" src="./viewer.js"></script>
+</body>
+</html>

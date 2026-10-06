@@ -19,5 +19,8 @@ data/ho_pbe0/
 data/designed_pbe0/
 data/ho_designed_pbe0/
 data/ho_designed_water/
+data/quantum_oracles/
 
 .dev-tools/
+web/node_modules/
+web/.npm-cache/

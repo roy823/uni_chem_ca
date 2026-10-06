@@ -1,17 +1,70 @@
 """Atom-block sparse algebra with differentiable values and bounded fill.
 
-No operation allocates a system-sized dense matrix. Integer joins are outside
-autograd; ordinary batched products/index_add retain higher derivatives.
+No operation allocates a system-sized dense matrix. CPU products use SciPy's
+compiled CSR kernel, retaining a symbolic block graph and exact adjoint products.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass
 
+import numpy as np
 import torch
+from scipy.sparse import bsr_matrix, csr_matrix
 from torch import Tensor
 
 from ..errors import CapacityError, StateError
+
+
+class _SparseProduct(torch.autograd.Function):
+    @staticmethod
+    def forward(ctx, av, bv, ar, ac, br, bc, n, budget):
+        if av.device.type != "cpu" or bv.device.type != "cpu":
+            raise StateError("The physical block product requires CPU tensors")
+        width = av.shape[-1]
+
+        def layout(row):
+            return np.r_[0, np.cumsum(np.bincount(row.numpy(), minlength=n))]
+
+        ai, bi = layout(ar), layout(br)
+        ga = csr_matrix((np.ones(len(ar), dtype=bool), ac.numpy(), ai), shape=(n, n))
+        gb = csr_matrix((np.ones(len(br), dtype=bool), bc.numpy(), bi), shape=(n, n))
+        graph = ga @ gb
+        graph.sort_indices()
+        size = len(graph.indices)
+        if size > budget:
+            raise CapacityError(f"Sparse patch fill {size} exceeds {budget}; no truncation applied")
+        if size * width**2 * av.element_size() > 512 * 1024**2:
+            raise CapacityError("Sparse multiplication output memory budget exceeded")
+        aa = bsr_matrix((av.detach().numpy(), ac.numpy(), ai), shape=(n * width, n * width))
+        bb = bsr_matrix((bv.detach().numpy(), bc.numpy(), bi), shape=(n * width, n * width))
+        aa, bb = aa.tocsr(), bb.tocsr()
+        aa.eliminate_zeros()
+        bb.eliminate_zeros()
+        product = (aa @ bb).tocoo()
+        row = np.repeat(np.arange(n), np.diff(graph.indptr))
+        col = graph.indices.astype(np.int64)
+        keys = row * n + col
+        query = (product.row // width) * n + product.col // width
+        where = np.searchsorted(keys, query)
+        values = np.zeros((size, width, width), dtype=av.detach().numpy().dtype)
+        if len(product.data):
+            values[where, product.row % width, product.col % width] = product.data
+        r, c, v = torch.from_numpy(row), torch.from_numpy(col), torch.from_numpy(values)
+        ctx.save_for_backward(av, bv, ar, ac, br, bc, r, c)
+        ctx.n, ctx.budget = n, budget
+        ctx.mark_non_differentiable(r, c)
+        return r, c, v
+
+    @staticmethod
+    def backward(ctx, _gr, _gc, gv):
+        av, bv, ar, ac, br, bc, row, col = ctx.saved_tensors
+        a = BlockMatrix(ar, ac, av, ctx.n, ctx.budget)
+        b = BlockMatrix(br, bc, bv, ctx.n, ctx.budget)
+        g = BlockMatrix(row, col, gv, ctx.n, ctx.budget)
+        da = g.matmul(b.transpose()).query(ar, ac)
+        db = a.transpose().matmul(g).query(br, bc)
+        return da, db, None, None, None, None, None, None
 
 
 @dataclass(frozen=True)
@@ -59,26 +112,17 @@ class BlockMatrix:
     def matmul(self, other):
         if self.n != other.n or self.width != other.width:
             raise StateError("Incompatible atom-block operators")
-        order = torch.argsort(other.row, stable=True)
-        sorted_rows = other.row[order]
-        lo = torch.searchsorted(sorted_rows, self.col)
-        hi = torch.searchsorted(sorted_rows, self.col, right=True)
-        counts = hi - lo
-        total = int(counts.sum())
-        if total > self.budget * max(8, self.width):
-            raise CapacityError("Sparse multiplication candidate budget exceeded")
-        left = torch.repeat_interleave(torch.arange(len(counts), device=counts.device), counts)
-        offset = torch.arange(total, device=counts.device) - torch.repeat_interleave(
-            counts.cumsum(0) - counts, counts
-        )
-        right = order[lo[left] + offset]
-        return self.assemble(
-            self.row[left],
-            other.col[right],
-            self.values[left] @ other.values[right],
+        row, col, values = _SparseProduct.apply(
+            self.values,
+            other.values,
+            self.row,
+            self.col,
+            other.row,
+            other.col,
             self.n,
-            self.budget,
+            min(self.budget, other.budget),
         )
+        return BlockMatrix(row, col, values, self.n, min(self.budget, other.budget))
 
     def diagonal_values(self):
         keep = self.row == self.col
@@ -103,21 +147,43 @@ class BlockMatrix:
         sums = self.values.abs().sum(-1)
         return sums.new_zeros((self.n, self.width)).index_add(0, self.row, sums).max()
 
-    def smooth_row_bound(self):
-        """Differentiable upper bound, including implicit zero matrix entries.
+    def symmetric(self):
+        return self.add(self.transpose()).scale(0.5)
 
-        sqrt(x^2+eps^2) majorizes |x|. Account for absent zeros analytically,
-        so adding a zero graph edge does not change the represented bound.
-        Log-sum-exp majorizes max without ambiguous tied-row subgradients.
-        These conservative smooth bounds vanish to the exact bound as their
-        stated smoothing constants tend to zero; no dense array is allocated.
-        """
-        eps = 1e-5
-        temperature = 1e-3
-        sums = (torch.sqrt(self.values.square() + eps**2) - eps).sum(-1)
+    def trace(self):
+        return self.diagonal_values().diagonal(dim1=-2, dim2=-1).sum()
+
+    def norm(self):
+        return self.values.norm()
+
+    def inner(self, other):
+        return (self.values * other.query(self.row, self.col)).sum()
+
+    def spectral_bounds(self, active):
+        diagonal = self.diagonal_values().diagonal(dim1=-2, dim2=-1)
+        sums = self.values.abs().sum(-1)
         rows = sums.new_zeros((self.n, self.width)).index_add(0, self.row, sums)
-        rows = rows + self.n * self.width * eps
-        return temperature * torch.logsumexp(rows.flatten() / temperature, 0)
+        radius = (rows - diagonal.abs()).clamp_min(0)
+        return (diagonal - radius)[active].min(), (diagonal + radius)[active].max()
+
+    def compress(self, tolerance):
+        """Symmetric block screening with a measured global row-norm bound.
+
+        Diagonal blocks are retained. This is an explicit numerical operation,
+        not an implicit truncation in matrix multiplication or budget handling.
+        """
+        if tolerance < 0:
+            raise StateError("Nonnegative compression tolerance required")
+        degree = max(1, int(torch.bincount(self.row, minlength=self.n).max()))
+        row_size = self.values.abs().sum(-1).amax(-1)
+        col_size = self.values.abs().sum(-2).amax(-1)
+        keep = (torch.maximum(row_size, col_size) > tolerance / degree) | (self.row == self.col)
+        discarded = self.values[~keep].abs().sum(-1)
+        bound = (
+            discarded.new_zeros((self.n, self.width)).index_add(0, self.row[~keep], discarded).max()
+        )
+        result = BlockMatrix(self.row[keep], self.col[keep], self.values[keep], self.n, self.budget)
+        return result, float(bound)
 
     def query(self, row, col):
         if not len(self.row):
@@ -136,125 +202,3 @@ class BlockMatrix:
             0, self.row * self.n + self.col, self.values
         )
         return out.reshape(self.n, self.n, a, a).permute(0, 2, 1, 3).reshape(self.n * a, self.n * a)
-
-
-def metric_filter(overlap: BlockMatrix, active: Tensor, degree: int):
-    """A finite local polynomial under-approximation of the inverse square root.
-
-    For S>=0, alpha>=lambda_max(S), X=I-S/alpha, the positive binomial
-    partial sum T_m satisfies 0<=sqrt(S)T_m<=I. Hence T_m D T_m has physical
-    Pauli bounds for any 0<=D<=I. No fill is dropped. The metric defect is
-    reported, not repaired with jitter or hidden global factorisation.
-    """
-    diagonal = overlap.diagonal_values().diagonal(dim1=-2, dim2=-1)
-    normalizer = torch.where(active, diagonal.clamp_min(1e-30).rsqrt(), torch.zeros_like(diagonal))
-    d = BlockMatrix.diagonal(torch.diag_embed(normalizer), overlap.budget)
-    normalized = d.matmul(overlap).matmul(d)
-    ident = BlockMatrix.diagonal(torch.diag_embed(torch.ones_like(normalizer)), overlap.budget)
-    alpha = normalized.smooth_row_bound().clamp_min(1.0)
-    x = ident.add(normalized, -1 / alpha)
-    term, total = ident, ident
-    coefficient = 1.0
-    for k in range(1, degree + 1):
-        term = term.matmul(x)
-        coefficient *= (2 * k - 1) / (2 * k)
-        total = total.add(term, coefficient)
-    t = d.matmul(total.scale(alpha.rsqrt()))
-    represented = t.transpose().matmul(overlap).matmul(t)
-    target = BlockMatrix.diagonal(torch.diag_embed(active.to(normalizer.dtype)), overlap.budget)
-    defect = target.add(represented, -1.0).row_bound()
-    return t, defect
-
-
-def constrained_kernel(
-    raw: BlockMatrix,
-    overlap: BlockMatrix,
-    active: Tensor,
-    spin_counts: Tensor,
-    *,
-    metric_degree=16,
-    fermi_degree=4,
-):
-    """Local positive Bernstein matrix function plus a scalar number solve.
-
-    M=(I+L/beta)/2 has spectrum in [0,1]. Bernstein basis operators are PSD
-    and sum to I. Sigmoid coefficients lie in [0,1], so both spin kernels
-    satisfy Pauli bounds after the contractive metric filter. Chemical
-    potentials use scalar reductions only. Polynomial halo/fill is explicit.
-    """
-    t, defect = metric_filter(overlap, active, metric_degree)
-    ident = BlockMatrix.diagonal(
-        torch.eye(raw.width, dtype=raw.values.dtype, device=raw.values.device).expand(
-            raw.n, -1, -1
-        ),
-        raw.budget,
-    )
-    symmetric = raw.add(raw.transpose()).scale(0.5)
-    # A fixed positive floor makes the map differentiable at zero generator.
-    beta = 1 + symmetric.smooth_row_bound()
-    m = ident.add(symmetric, 1 / beta).scale(0.5)
-    complement = ident.add(m, -1.0)
-    import math
-
-    left, right = [ident], [ident]
-    for _ in range(fermi_degree):
-        left.append(left[-1].matmul(m))
-        right.append(right[-1].matmul(complement))
-    basis = [
-        t.matmul(left[k].matmul(right[fermi_degree - k]))
-        .matmul(t.transpose())
-        .scale(math.comb(fermi_degree, k))
-        for k in range(fermi_degree + 1)
-    ]
-    weights = torch.stack([b.trace_product(overlap) for b in basis])
-    capacity = weights.sum()
-    if bool((spin_counts > capacity.detach() + 1e-9).any()):
-        raise StateError(
-            "Local metric representation has insufficient electron capacity; increase metric degree/basis"
-        )
-    knots = torch.linspace(-6, 6, fermi_degree + 1, device=weights.device, dtype=weights.dtype)
-    potentials = []
-    for target in spin_counts:
-        if float(target) == 0:
-            potentials.append(weights.new_tensor(-100.0))
-            continue
-        if abs(float(target - capacity.detach())) < 1e-10:
-            potentials.append(weights.new_tensor(100.0))
-            continue
-        with torch.no_grad():
-            lo, hi = weights.new_tensor(-80.0), weights.new_tensor(80.0)
-            for _ in range(60):
-                mid = (lo + hi) / 2
-                if float((torch.sigmoid(knots + mid) * weights).sum()) > float(target):
-                    hi = mid
-                else:
-                    lo = mid
-            root = (lo + hi) / 2
-        # Newton refinements retain implicit first/second/higher derivatives.
-        for _ in range(3):
-            occ = torch.sigmoid(knots + root)
-            root = root - ((occ * weights).sum() - target) / (
-                occ * (1 - occ) * weights
-            ).sum().clamp_min(1e-20)
-        potentials.append(root)
-    kernels = []
-    for spin, mu in enumerate(potentials):
-        if float(spin_counts[spin]) == 0:
-            coefficients = torch.zeros_like(knots)
-        elif abs(float(spin_counts[spin] - capacity.detach())) < 1e-10:
-            coefficients = torch.ones_like(knots)
-        else:
-            coefficients = torch.sigmoid(knots + mu)
-        result = basis[0].scale(coefficients[0])
-        for k in range(1, len(basis)):
-            result = result.add(basis[k], coefficients[k])
-        kernels.append(result)
-    return kernels, {
-        "metric_defect_bound": float(defect.detach()),
-        "metric_degree": metric_degree,
-        "fermi_degree": fermi_degree,
-        "spin_counts": [float(k.trace_product(overlap).detach()) for k in kernels],
-        "density_blocks": len(kernels[0].row),
-        "global_dense_algebra": False,
-        "pauli_construction": "positive Bernstein function and contractive metric polynomial",
-    }

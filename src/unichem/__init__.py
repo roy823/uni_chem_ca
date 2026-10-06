@@ -1,41 +1,27 @@
-"""Quantum-informed, synchronous extended-cell research infrastructure.
+"""Bounded local quantum-cell execution and independent physical HF references."""
 
-An atom is an extended quantum cell; a lattice voxel is only a quadrature/field cell.
-The shipped energy is a numerical demonstration, NOT a calibrated chemical potential.
-"""
-
-from .evaluate import Evaluator
-from .factory import make_world
 from .grid import Grid
-from .runtime.engine import StepResult, SynchronousEngine
-from .state import AtomState, ElectronState, LatentState, World
+from .molecule import AtomState, World, make_world
+from .quantum.blocks import BlockMatrix
+from .quantum.evaluator import Evaluation, Evaluator
+from .runtime.local_cells import CellSnapshot, FieldSnapshot, LocalCellEngine
+from .runtime.molecular import StepResult, SynchronousEngine
+from .runtime.scf import SCFResult, SCFSolver
 
+__version__ = "0.5.0"
 __all__ = [
     "AtomState",
-    "ElectronState",
+    "BlockMatrix",
+    "CellSnapshot",
+    "Evaluation",
     "Evaluator",
+    "FieldSnapshot",
     "Grid",
-    "LatentState",
+    "LocalCellEngine",
+    "SCFResult",
+    "SCFSolver",
     "StepResult",
     "SynchronousEngine",
     "World",
     "make_world",
-]
-__version__ = "0.3.0"
-
-from .models.coupling import ConditionalGaussianCoupling
-from .models.encoder import CoarseFieldEncoder
-from .quantum.blocks import BlockMatrix
-from .quantum.density import LocalQuantumBackend
-from .runtime.coupled import BathConfig, CoupledSynchronousEngine
-from .runtime.electrons import LocalKernelRelaxer
-
-__all__ += [
-    "BathConfig",
-    "BlockMatrix",
-    "CoarseFieldEncoder",
-    "ConditionalGaussianCoupling",
-    "CoupledSynchronousEngine",
-    "LocalKernelRelaxer",
-    "LocalQuantumBackend",
 ]

@@ -4,16 +4,17 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "uni-chem-ca"
-version = "0.3.0"
-description = "Synchronous extended-atom cellular metamodel with compact electronic states"
+version = "0.5.0"
+description = "Bounded local quantum-cell execution with independent field inputs and HF references"
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "MIT"}
-dependencies = ["torch>=2.5,<3", "numpy>=1.26,<3", "scipy>=1.11,<2"]
+dependencies = ["torch>=2.5,<3", "numpy>=1.26,<3", "scipy>=1.11,<2", "ase>=3.22"]
 
 [project.optional-dependencies]
 dev = ["pytest>=8", "pytest-cov>=5", "ruff>=0.8"]
-data = ["ase>=3.22", "requests>=2.31"]
+data = ["requests>=2.31"]
+physics = ["pyscf>=2.10,<3"]
 
 [project.scripts]
 unichem = "unichem.cli:main"

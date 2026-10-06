@@ -49,14 +49,3 @@ def test_poisson_energy_gradient_is_potential():
     result = PeriodicPoisson().solve(grid, rho)
     derivative = torch.autograd.grad(result.electrostatic_energy, raw)[0] / grid.dv
     assert torch.allclose(derivative, result.potential, atol=2e-12, rtol=2e-12)
-
-
-def test_float32_neutral_roundoff_is_not_treated_as_net_charge(h2):
-    from unichem import Evaluator
-
-    w = h2.to(dtype=torch.float32)
-    result = Evaluator().energy_and_forces(w)
-    assert torch.isfinite(result.forces).all()
-    assert float(
-        (result.evaluation.context.quantum.density.sum() * w.grid.dv).detach()
-    ) == pytest.approx(2.0, abs=2e-5)
