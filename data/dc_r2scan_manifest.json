@@ -1,0 +1,358 @@
+{
+  "commit": "2d2a91359fa6ce2f8a6ce15aab04512385e1790e",
+  "source": "https://github.com/paesanilab/Data_Repository",
+  "method": "DC-r2SCAN",
+  "license": "No repository license located; source retained for attribution; no redistribution grant inferred",
+  "files": [
+    {
+      "path": "data\\raw\\dc_r2scan\\training\\00_dlpoly_368K\\set.000\\box.npy",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/training/00_dlpoly_368K/set.000/box.npy",
+      "git_blob_sha1": "bf25412ea6592c32ea855b746717265e09e57eff",
+      "sha256": "7055484e66bb0971171f506c277bba174a8afbacd4853f6366f4a3b4ddbf624e",
+      "bytes": 34184
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\training\\00_dlpoly_368K\\set.000\\coord.npy",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/training/00_dlpoly_368K/set.000/coord.npy",
+      "git_blob_sha1": "b4edb1de2ddfc6e0ea19919a8e29f567c099f178",
+      "sha256": "e6bc1d19452c4b83132004afd1f8d70686b26b40d1884f803dd271e3dfce9aaa",
+      "bytes": 8718464
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\training\\00_dlpoly_368K\\set.000\\energy.npy",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/training/00_dlpoly_368K/set.000/energy.npy",
+      "git_blob_sha1": "094d7edb095b23b62086a153e25b32bca3de90cc",
+      "sha256": "b2fe6bbe5553837b4251fc9d464f1420396342aebc337ac5aa74f4ccfaaae055",
+      "bytes": 3912
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\training\\00_dlpoly_368K\\set.000\\force.npy",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/training/00_dlpoly_368K/set.000/force.npy",
+      "git_blob_sha1": "8456d163413a16d1115973d69528d6f1b7ce06fd",
+      "sha256": "f06e742ae8d4a834a9cd37f5ea3e5c3dfdc49a441645daeffd9c31f884c494b5",
+      "bytes": 8718464
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\training\\00_dlpoly_368K\\type.raw",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/training/00_dlpoly_368K/type.raw",
+      "git_blob_sha1": "664d90548bf904cb7618493869add6fb3305aef4",
+      "sha256": "5553b1d2a1802c8ee68908fab3c3a39d3c00439fddd8623e803c57639c838a35",
+      "bytes": 1535
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\training\\E0.001\\set.000\\box.npy",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/training/E0.001/set.000/box.npy",
+      "git_blob_sha1": "58bc04b133c50a712fbb553b947368b08a8d6a62",
+      "sha256": "d0089503672d8ce4ee15041849dce4c10d5d800164428687ea3d8d4680fe5bc9",
+      "bytes": 3080
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\training\\E0.001\\set.000\\coord.npy",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/training/E0.001/set.000/coord.npy",
+      "git_blob_sha1": "d278062207e57e14750811f42cb56e1876deedce",
+      "sha256": "b275f23d316e5c183bdfef77730770a791d1e2cf25e3aab2cf8b6dc9d4bf2950",
+      "bytes": 377984
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\training\\E0.001\\set.000\\energy.npy",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/training/E0.001/set.000/energy.npy",
+      "git_blob_sha1": "51591c556f90a78539fba272d5141a2a4244d34a",
+      "sha256": "9187179c59857b820c68e13fe7c2e60fcf5b47c6bc7489e2b3caabb69e110afe",
+      "bytes": 456
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\training\\E0.001\\set.000\\force.npy",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/training/E0.001/set.000/force.npy",
+      "git_blob_sha1": "d80782b1138766fc972b29b9a30fea92ecc462ea",
+      "sha256": "a1d930511945756394e0a3c8c441828657a4d4664dade73b913d621a3df93d6d",
+      "bytes": 377984
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\training\\E0.001\\type.raw",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/training/E0.001/type.raw",
+      "git_blob_sha1": "a644fc74d71307430c79500b5a6962bb71d4e25e",
+      "sha256": "ab9e8b22b19a0798b23e88bdd9973480020636b6f431e8d233271ce5d150139f",
+      "bytes": 768
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\training\\biased_0.0\\set.000\\box.npy",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/training/biased_0.0/set.000/box.npy",
+      "git_blob_sha1": "db0f422cca80fa49e3b17f3f3c913392dec21cef",
+      "sha256": "188a594cef7e48507e3fc4ea5c4f28990b8ad241da8c25f008db63729ffff432",
+      "bytes": 5888
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\training\\biased_0.0\\set.000\\coord.npy",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/training/biased_0.0/set.000/coord.npy",
+      "git_blob_sha1": "72276e60a20f9d9e456164ffa63065d3650e4d9f",
+      "sha256": "8ee2fd7b79098e2295d3bc5268213ef93b384d37225ee344910128b6c6e40e7f",
+      "bytes": 737408
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\training\\biased_0.0\\set.000\\energy.npy",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/training/biased_0.0/set.000/energy.npy",
+      "git_blob_sha1": "a2c3bd89ee716f9c955f59a920a46a322c8b7292",
+      "sha256": "4c6976293d326a92a37e954002eeb1b311e74b9fba98ec97448bedbdd8b7dad1",
+      "bytes": 768
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\training\\biased_0.0\\set.000\\force.npy",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/training/biased_0.0/set.000/force.npy",
+      "git_blob_sha1": "248786efbc8592139a5a7b9c9311ff0b0221f929",
+      "sha256": "e6a282f51221c41b8e0efdebeb029e9bd13bf0cc9dc4eac288973ff26bc67cbe",
+      "bytes": 737408
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\training\\biased_0.0\\type.raw",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/training/biased_0.0/type.raw",
+      "git_blob_sha1": "a644fc74d71307430c79500b5a6962bb71d4e25e",
+      "sha256": "ab9e8b22b19a0798b23e88bdd9973480020636b6f431e8d233271ce5d150139f",
+      "bytes": 768
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\training\\biased_1.2\\set.000\\box.npy",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/training/biased_1.2/set.000/box.npy",
+      "git_blob_sha1": "db0f422cca80fa49e3b17f3f3c913392dec21cef",
+      "sha256": "188a594cef7e48507e3fc4ea5c4f28990b8ad241da8c25f008db63729ffff432",
+      "bytes": 5888
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\training\\biased_1.2\\set.000\\coord.npy",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/training/biased_1.2/set.000/coord.npy",
+      "git_blob_sha1": "e6782de8eb5d547c2800f15483d39f8ec74fe4d6",
+      "sha256": "69e6e55782c9c900b025bb20c3a404c039338e205de700784c03f449284b12ec",
+      "bytes": 737408
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\training\\biased_1.2\\set.000\\energy.npy",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/training/biased_1.2/set.000/energy.npy",
+      "git_blob_sha1": "c24b3df2eb3bd449c5652a1a0874f595f868df53",
+      "sha256": "4f47a3391ea5808093906008e2449965fe6cca8987e8c3166f17f781f750f07b",
+      "bytes": 768
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\training\\biased_1.2\\set.000\\force.npy",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/training/biased_1.2/set.000/force.npy",
+      "git_blob_sha1": "9ddfad860c696c23d639fd5ffe502b036a189114",
+      "sha256": "bc7ad3c659cc60ab86892e270c2ad4186fb618c0e67ca274bfb825140a8e4d5d",
+      "bytes": 737408
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\training\\biased_1.2\\type.raw",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/training/biased_1.2/type.raw",
+      "git_blob_sha1": "a644fc74d71307430c79500b5a6962bb71d4e25e",
+      "sha256": "ab9e8b22b19a0798b23e88bdd9973480020636b6f431e8d233271ce5d150139f",
+      "bytes": 768
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\training\\biased_2.4\\set.000\\box.npy",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/training/biased_2.4/set.000/box.npy",
+      "git_blob_sha1": "db0f422cca80fa49e3b17f3f3c913392dec21cef",
+      "sha256": "188a594cef7e48507e3fc4ea5c4f28990b8ad241da8c25f008db63729ffff432",
+      "bytes": 5888
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\training\\biased_2.4\\set.000\\coord.npy",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/training/biased_2.4/set.000/coord.npy",
+      "git_blob_sha1": "44837eb93d20cb549e8a690a6fb3908c4737a2ea",
+      "sha256": "24a82ea658d31f938c2aa6eba55dad427a558b19364bee64275e1fe1660c31ba",
+      "bytes": 737408
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\training\\biased_2.4\\set.000\\energy.npy",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/training/biased_2.4/set.000/energy.npy",
+      "git_blob_sha1": "7b59158f0e32b3d295337b2098cc8dd8d6948c52",
+      "sha256": "97d7077546498277f54dbcf6a89c02fe80f0de6e4f07849e49669eba5feaea20",
+      "bytes": 768
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\training\\biased_2.4\\set.000\\force.npy",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/training/biased_2.4/set.000/force.npy",
+      "git_blob_sha1": "2677bc4ff0725c675fcbfa3a0be4151e59d975b1",
+      "sha256": "4f9fd31469e9531337fa961c4dc78f979f9232e76d1e2a5b68af358ce973b9fe",
+      "bytes": 737408
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\training\\biased_2.4\\type.raw",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/training/biased_2.4/type.raw",
+      "git_blob_sha1": "a644fc74d71307430c79500b5a6962bb71d4e25e",
+      "sha256": "ab9e8b22b19a0798b23e88bdd9973480020636b6f431e8d233271ce5d150139f",
+      "bytes": 768
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\validation\\00_dlpoly_368K\\set.000\\box.npy",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/validation/00_dlpoly_368K/set.000/box.npy",
+      "git_blob_sha1": "3924cac2ff1259d4735580b194148af01a8844d1",
+      "sha256": "1758916359662e01d0978a41a9418fe8cd4a931e2d4e35d7f4cc85bf88aa3497",
+      "bytes": 8624
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\validation\\00_dlpoly_368K\\set.000\\coord.npy",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/validation/00_dlpoly_368K/set.000/coord.npy",
+      "git_blob_sha1": "f8f8a09dece8cf93583f4088c071dd3e09d5ee8f",
+      "sha256": "2422e88eb4bfa37a76ea12a29bf3b90543173972ee2c178546b2bc90c988bdd4",
+      "bytes": 2175104
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\validation\\00_dlpoly_368K\\set.000\\energy.npy",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/validation/00_dlpoly_368K/set.000/energy.npy",
+      "git_blob_sha1": "ca7116bca5e2ec30e3f9aa219ab37df2d48d71cc",
+      "sha256": "29d3f3d84a247a30d9e1b4c8880c1a6c2806cff76f282d8953deb121e36feba2",
+      "bytes": 1072
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\validation\\00_dlpoly_368K\\set.000\\force.npy",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/validation/00_dlpoly_368K/set.000/force.npy",
+      "git_blob_sha1": "5005e4d945f17ede5ad289e0468a872882d4a43e",
+      "sha256": "85c9521c8f9bd0cb914b210428dcc6ff91abb68b27fd374e8790bf1a0e40f690",
+      "bytes": 2175104
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\validation\\00_dlpoly_368K\\type.raw",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/validation/00_dlpoly_368K/type.raw",
+      "git_blob_sha1": "664d90548bf904cb7618493869add6fb3305aef4",
+      "sha256": "5553b1d2a1802c8ee68908fab3c3a39d3c00439fddd8623e803c57639c838a35",
+      "bytes": 1535
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\validation\\E0.001\\set.000\\box.npy",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/validation/E0.001/set.000/box.npy",
+      "git_blob_sha1": "ddf0367fdddc76517d0bdc77c7b393257c543b53",
+      "sha256": "87fd02f9fc4689d4fcdc748668df682712dbce411e311c0c29a50dd197991b2e",
+      "bytes": 848
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\validation\\E0.001\\set.000\\coord.npy",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/validation/E0.001/set.000/coord.npy",
+      "git_blob_sha1": "4eb87e83745b7874ebfd98c9a18c38140597ba58",
+      "sha256": "e777c5d6dae60ae707dc2bc8af7326f1e474ef6c6e6892997d6b80645bf3455d",
+      "bytes": 92288
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\validation\\E0.001\\set.000\\energy.npy",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/validation/E0.001/set.000/energy.npy",
+      "git_blob_sha1": "abcf27a1d659f927f6b26b7f3fbe56d4dc88a135",
+      "sha256": "6227c62cc404e347b46f75d4825c9af0634acd54174ea927ee773f5297502d1b",
+      "bytes": 208
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\validation\\E0.001\\set.000\\force.npy",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/validation/E0.001/set.000/force.npy",
+      "git_blob_sha1": "5caa91db712d6a6c75dc05f6a3dc1d58e7cde299",
+      "sha256": "7df2e7ddec3ceb378c87f8f9319ba950dcadd41f0cd74f34b166b533032e5894",
+      "bytes": 92288
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\validation\\E0.001\\type.raw",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/validation/E0.001/type.raw",
+      "git_blob_sha1": "a644fc74d71307430c79500b5a6962bb71d4e25e",
+      "sha256": "ab9e8b22b19a0798b23e88bdd9973480020636b6f431e8d233271ce5d150139f",
+      "bytes": 768
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\validation\\biased_0.0\\set.000\\box.npy",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/validation/biased_0.0/set.000/box.npy",
+      "git_blob_sha1": "38db6953358f438fe329b87995c41ba8d468337e",
+      "sha256": "49148214acefc56548802904fc933d481249a7b081929930a33c0a9cad15b160",
+      "bytes": 1568
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\validation\\biased_0.0\\set.000\\coord.npy",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/validation/biased_0.0/set.000/coord.npy",
+      "git_blob_sha1": "0a7f694ace0f80c5ea7d50c989ed276cd994745a",
+      "sha256": "888487033cd80ea8541d2ea5ac8f48a880474d308e80be8c14379cb0edd96c7b",
+      "bytes": 184448
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\validation\\biased_0.0\\set.000\\energy.npy",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/validation/biased_0.0/set.000/energy.npy",
+      "git_blob_sha1": "703f6317a81a9ce1c3763d39a4af53195736c5bb",
+      "sha256": "52cf581df2e5c8c086d84a6cf2e434deef61827ca15f82f64c9f0c7961499311",
+      "bytes": 288
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\validation\\biased_0.0\\set.000\\force.npy",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/validation/biased_0.0/set.000/force.npy",
+      "git_blob_sha1": "5b9b7e8594ab20a7f063c28dce0f73d50811b254",
+      "sha256": "9fcec11ca0e8f610bef1fb81e95ff6cb71783af499121382baa98040a0436b07",
+      "bytes": 184448
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\validation\\biased_0.0\\type.raw",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/validation/biased_0.0/type.raw",
+      "git_blob_sha1": "a644fc74d71307430c79500b5a6962bb71d4e25e",
+      "sha256": "ab9e8b22b19a0798b23e88bdd9973480020636b6f431e8d233271ce5d150139f",
+      "bytes": 768
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\validation\\biased_1.2\\set.000\\box.npy",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/validation/biased_1.2/set.000/box.npy",
+      "git_blob_sha1": "38db6953358f438fe329b87995c41ba8d468337e",
+      "sha256": "49148214acefc56548802904fc933d481249a7b081929930a33c0a9cad15b160",
+      "bytes": 1568
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\validation\\biased_1.2\\set.000\\coord.npy",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/validation/biased_1.2/set.000/coord.npy",
+      "git_blob_sha1": "c23e2ed3e3ce7f5f341808a5f203abae13faa2f4",
+      "sha256": "8e4792a0f25898291ff157021c42396c82450a6b37a8e5a42f46a1837c5bbde6",
+      "bytes": 184448
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\validation\\biased_1.2\\set.000\\energy.npy",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/validation/biased_1.2/set.000/energy.npy",
+      "git_blob_sha1": "28ad3f1ed495e27ec4a34f599f1a71953e444562",
+      "sha256": "c040a630c7dfae4defc9137a7562d57581ede6c73c5e8e637cef2b2acb262d10",
+      "bytes": 288
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\validation\\biased_1.2\\set.000\\force.npy",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/validation/biased_1.2/set.000/force.npy",
+      "git_blob_sha1": "d2c0b6ef70161c4565e82838677dd5ca828faebd",
+      "sha256": "0527a1f950d1055ee66cb83a8f1270f19760b7d9a63da06e8aaa58e8e9711720",
+      "bytes": 184448
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\validation\\biased_1.2\\type.raw",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/validation/biased_1.2/type.raw",
+      "git_blob_sha1": "a644fc74d71307430c79500b5a6962bb71d4e25e",
+      "sha256": "ab9e8b22b19a0798b23e88bdd9973480020636b6f431e8d233271ce5d150139f",
+      "bytes": 768
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\validation\\biased_2.4\\set.000\\box.npy",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/validation/biased_2.4/set.000/box.npy",
+      "git_blob_sha1": "38db6953358f438fe329b87995c41ba8d468337e",
+      "sha256": "49148214acefc56548802904fc933d481249a7b081929930a33c0a9cad15b160",
+      "bytes": 1568
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\validation\\biased_2.4\\set.000\\coord.npy",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/validation/biased_2.4/set.000/coord.npy",
+      "git_blob_sha1": "738d32855427af6d750e700bb3f292a4d5a55dfb",
+      "sha256": "d44e16977d5f74750b35ba882091dd28ebcb73db65fb2fb2f76ad1fcb9dd7bb4",
+      "bytes": 184448
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\validation\\biased_2.4\\set.000\\energy.npy",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/validation/biased_2.4/set.000/energy.npy",
+      "git_blob_sha1": "91ab3f011cb387369f851817304b5753b9c7c205",
+      "sha256": "61770089633cdfd0cc396ea7a75767fd4dac296ea9e24c67627d73b99f2b9f94",
+      "bytes": 288
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\validation\\biased_2.4\\set.000\\force.npy",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/validation/biased_2.4/set.000/force.npy",
+      "git_blob_sha1": "10951875a71217ae5880420f742d8b07219c0630",
+      "sha256": "69e95a429c65b88b133f08b97a8764eba154c4c98374cb4e1424476c01007d73",
+      "bytes": 184448
+    },
+    {
+      "path": "data\\raw\\dc_r2scan\\validation\\biased_2.4\\type.raw",
+      "url": "https://raw.githubusercontent.com/paesanilab/Data_Repository/2d2a91359fa6ce2f8a6ce15aab04512385e1790e/DC-r2SCAN_water_autoionization/training_and_validation_set/validation/biased_2.4/type.raw",
+      "git_blob_sha1": "a644fc74d71307430c79500b5a6962bb71d4e25e",
+      "sha256": "ab9e8b22b19a0798b23e88bdd9973480020636b6f431e8d233271ce5d150139f",
+      "bytes": 768
+    }
+  ]
+}
